@@ -38,7 +38,7 @@ const observable = new Observable();
 // 订阅可观察对象
 const subscription = observable.subscribe({
   next: (value) => console.log(value),
-  error: (error) => console.error(error),
+  error: (value) => console.error(value),
 });
 
 // 取消订阅
@@ -59,7 +59,7 @@ const observable = new Observable();
 // 订阅可观察对象
 observable.subscribe({
   next: (value) => console.log(value),
-  error: (error) => console.error(error),
+  error: (value) => console.error(value),
 });
 
 // 在需要的地方，调用Observable的next方法
@@ -112,7 +112,7 @@ const observable = new Observable({ options: { relay: 1 } });
 // 订阅可观察对象
 observable.subscribe({
   next: (value) => console.log(value),
-  error: (error) => console.error(error),
+  error: (value) => console.error(value),
 });
 
 // 出现异常时，调用Observable的error方法
@@ -151,7 +151,7 @@ observable.subscribe((value) => console.log('subscribe-1: ', value));
 // 监听多种事件
 observable.subscribe({
   next: (value) => console.log('subscribe-2-next: ', value),
-  error: (error) => console.error('subscribe-2-error: ', error),
+  error: (value) => console.error('subscribe-2-error: ', value),
 });
 
 // 再次调用Observable的next方法
@@ -210,7 +210,7 @@ observable.next('hello again');
     ```js
     const subscription = observable.subscribe({
         next: (value) => console.log(value),
-        error: (error) => console.error(error),
+        error: (value) => console.error(value),
     });
 
     subscription.unsubscribe();
@@ -270,7 +270,7 @@ observable.next('hello again');
 
     observable.subscribe({
         next: (value) => console.log('subscribe shared observer 2-next: ', value),
-        error: (error) => console.error('subscribe shared observer 2-error: ', error),
+        error: (value) => console.error('subscribe shared observer 2-error: ', value),
     });
     ```
 
