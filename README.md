@@ -26,7 +26,7 @@ const observable = new Observable();
 
 ### 订阅Observable
 
-要订阅Observable，只需调用subscribe方法并传入一个观察者对象。观察者对象应该具有next、error方法，用于处理Observable发出的值和错误信号。
+要订阅Observable，调用subscribe方法并传入一个观察者对象。观察者对象应该具有next、error方法，用于处理Observable发出的值和错误信号。
 
 ```js
 import { Observable } from 'observable-rx';
