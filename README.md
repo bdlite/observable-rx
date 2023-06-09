@@ -16,7 +16,7 @@ Observable-RX是一个基于观察者模式的JavaScript库，用于处理异步
 
 ### 创建Observable
 
-要创建一个Observable，只需调用Observable构造函数并传入一个订阅函数。订阅函数将接收一个观察者对象，该对象具有next、error方法，用于处理Observable发出的值、错误。
+要创建一个Observable，只需调用Observable构造函数即可。
 
 ```js
 import { Observable } from 'observable-rx';
