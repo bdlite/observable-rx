@@ -189,7 +189,7 @@ observable.next('hello again');
 
 ### 实例方法
 
-- `subscribe(observer: PartialObserver): Subscription`
+- `subscribe(observer: Observer | Callback): Subscription`
 
     订阅Observable。
 
@@ -201,7 +201,7 @@ observable.next('hello again');
 
     或者：
 
-    - value: 数据处理函数，接收一个数据参数
+    - callback: next回调，数据处理函数，接收一个数据参数
 
     返回值：
 
