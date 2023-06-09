@@ -88,7 +88,7 @@ observable.next('hello world');
 // 订阅可观察对象
 observable.subscribe({
   next: (value) => console.log(value), // 会立即被调用一次
-  error: (error) => console.error(error),
+  error: (value) => console.error(value),
 });
 ```
 
