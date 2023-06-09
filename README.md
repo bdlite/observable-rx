@@ -252,7 +252,7 @@ observable.next('hello again');
     - void
 
     ```js
-    observable.error('something wrong');
+    observable.error('something went wrong');
     ```
 
 ### Operators
