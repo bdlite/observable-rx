@@ -1,6 +1,7 @@
 // This section of TypeScript code has not been validated yet, please use with caution.
 
-import Observable, { Subscription } from './observable';
+import Observable from './observable';
+import { Subscription } from './interfaces';
 
 export function share(): (observable: Observable<any>) => void {
   return (observable: Observable<any>) => {

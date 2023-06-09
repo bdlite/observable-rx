@@ -1,52 +1,26 @@
 // This section of TypeScript code has not been validated yet, please use with caution.
+import { Options, Status, Props, Callback, Observer, Subscription, getPlainFun } from './interfaces';
 
-const getPlainFun = (fun: any): Function => typeof fun === 'function' ? fun : () => {}
-
-
-interface Options {
-  relay?: number;
-  [key: string]: any;
-}
-
-interface Status {
-  isUnSub: boolean;
-  hasData: boolean;
-  hasError: boolean;
-  [key: string]: any;
-}
-
-interface Props {
-  initialData?: any;
-  options?: Options;
-  status?: Status;
-}
-
-export interface Observer {
-  next?: (data: any) => void;
-  error?: (data: any) => void;
-  complete?: () => void;
-}
-
-export interface Subscription {
-  unsubscribe: () => void;
-  [key: string]: any;
-}
 
 export default class Observable {
   private data: any;
   private options: Options;
   private status: Status;
   private pubConfig: {
-    publish: (value: any) => void;
-    errorPub: (value: any) => void;
+    publish: Callback;
+    errorPub: Callback;
   };
-
+  
   constructor({ initialData, options, status }: Props = {}) {
     this.data = initialData;
     this.options = options || { relay: 0 };
     this.status = { isUnSub: false, hasData: false, hasError: false, ...(status || {}) };
-    this.pubConfig = { publish: () => {}, errorPub: () => {} };
+    this.pubConfig = { publish: getPlainFun(), errorPub: getPlainFun() };
   }
+
+  private unsubscribe(): void {
+    this.status.isUnSub = true;
+  };
 
   public getData(): any {
     return this.data;
@@ -85,7 +59,7 @@ export default class Observable {
     this.pubConfig.errorPub();
   }
 
-  public next(nextData: any): boolean {
+  public next(nextData: any): void {
     Object.assign(this.status, { hasData: true, hasError: false });
 
     this.data = nextData;
@@ -95,7 +69,7 @@ export default class Observable {
     this.pubConfig.publish(nextData);
   }
 
-  public error(errData: any): boolean {
+  public error(errData: any): void {
     Object.assign(this.status, { hasError: true });
 
     if (this.status.isUnSub) return;
@@ -103,13 +77,7 @@ export default class Observable {
     this.pubConfig.errorPub(errData);
   }
 
-  public subscribe(observer: Observer | ((value: any) => void)): Subscription {
-    const subscription = {
-      unsubscribe: () => {
-        this.status.isUnSub = true;
-      }
-    }
-
+  public subscribe(observer: Observer | Callback): Subscription {
     if (typeof observer === 'function') {
       this.pubConfig.publish = observer;
     } else if (observer) {
@@ -125,6 +93,10 @@ export default class Observable {
       this.publishError();
     }
 
-    return subscription;
+    return {
+      unsubscribe: () => {
+        this.unsubscribe();
+      }
+    };
   }
 }

@@ -1,6 +1,7 @@
 // This file has not been validated and is for reference only.
 
-import Observable, { Observer } from './observable';
+import { Callback, Observer } from './interfaces';
+import Observable from './observable';
 import { share } from './share';
 
 
@@ -21,7 +22,7 @@ export function createObservableKit(initialData: any, options?: any): Observable
   const observable = new Observable({ initialData, options: options || { relay: 1 } });
   share()(observable);
 
-  function subscribe(mountedFunOrConfig: Observer | ((value: any) => void), unmountedFun?: () => void): () => void {
+  function subscribe(mountedFunOrConfig: Observer | Callback, unmountedFun?: () => void): () => void {
     let subscription = observable.subscribe(mountedFunOrConfig);
 
     return () => {
