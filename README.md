@@ -1,4 +1,4 @@
-# Observable-RX
+# Observable-RX 文档
 
 ## 简介
 
@@ -6,12 +6,12 @@ Observable-RX是一个基于观察者模式的JavaScript库，用于处理异步
 
 有别于RxJS的使用，其中一点是，当发出了error事件，不需要retry（吐槽下retry也没用），next跟error可以同时不限制地使用，这也是自研的原因之一。
 
-## ~~安装~~
+## 安装
 
-使用npm安装：(还没有发布)
+使用npm安装：
 
 ```js
-// npm install observable-rx
+ npm install observable-rx
 ```
 
 ## 使用
@@ -276,9 +276,9 @@ observable.next('hello again');
 
 ## 特别说明
 
-目前还处于把源码开源未发布阶段，如有幸被阅读，欢迎斧正并提出宝贵意见，如您有意使用，欢迎联系本人yexinxie@163.com，那么这个小项目会根据您的意见修改并添加测试用例，然后加速发布。
+如您有意使用，欢迎联系本人yexinxie@163.com，这个小项目会根据您的意见修改并添加测试用例。
 
->The source code for this project is currently being prepared for open source release and is not yet available. The author welcomes feedback and suggestions for improvement, as well as inquiries about potential usage. You can contact the author at yexinxie@163.com. Once feedback is received, the author plans to modify and add test cases to the project before accelerating its release. 
+> If you are interested in using it, please contact me at yexinxie@163.com. This small project will be modified and test cases will be added according to your feedback.
 
 ## 本库参考
 
