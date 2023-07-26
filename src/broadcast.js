@@ -1,7 +1,7 @@
 import Observable from './observable'
 
 function getName(channelName) {
-  return `bdlite-observable-broadcast-${channelName}`;
+  return `observable-rx-broadcast-${channelName}`;
 }
 
 export function broadcast(channelName) {
