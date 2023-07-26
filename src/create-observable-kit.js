@@ -1,9 +1,15 @@
 import Observable from './observable'
+import { broadcast } from './broadcast'
 import { share } from './share'
 
-export function createObservableKit(initialData, options) {
+export function createObservableKit(initialData, options, channelName = '') {
   const observable = new Observable({ initialData, options: options || { relay: 1 } })
-  share()(observable) // 转多播
+
+  if (channelName) {
+    broadcast(channelName)(observable) // 转跨页面广播模式
+  } else {
+    share()(observable) // 转发布订阅模式
+  }
 
   /**
    * @function subscribe
