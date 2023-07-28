@@ -274,6 +274,7 @@ observable.next('hello again');
     });
     ```
 - `broadcast`
+
    使用 BroadcastChannel API来实现订阅，支持跨页面同步数据。
 
 ## 特别说明
