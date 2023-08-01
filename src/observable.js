@@ -70,20 +70,20 @@ export default class Observable {
     return true;
   }
 
-  subscribe(obsever) {
+  subscribe(observer) {
     const subscription = {
       unsubscribe: () => {
         this.status.isUnSub = true;
       }
     }
 
-    if (typeof obsever === 'function') {
-      this.pubConfig.publish = obsever;
-    } else if (obsever) {
+    if (typeof observer === 'function') {
+      this.pubConfig.publish = observer;
+    } else if (observer) {
       Object.assign(this.pubConfig, {
-        ...obsever,
-        publish: getPlainFun(obsever.next),
-        errorPub: getPlainFun(obsever.error),
+        ...observer,
+        publish: getPlainFun(observer.next),
+        errorPub: getPlainFun(observer.error),
       })
     }
 
