@@ -70,7 +70,7 @@ export function broadcast(channelName) {
       if (!next(...dataArgs)) return;
 
       try {
-        bc.postMessage({ type: 'next', data: getData() });
+        bc.postMessage({ channelName: name, type: 'next', data: getData() });
       } catch (e) {
         console.error(new Error(`[Observable: broadcast] next function \n ${ e}`));
       }
@@ -80,13 +80,17 @@ export function broadcast(channelName) {
       if (!error(...dataArgs)) return;
 
       try {
-        bc.postMessage({ type: 'error' });
+        bc.postMessage({ channelName: name, type: 'error' });
       } catch (e) {
         console.error(new Error(`[Observable: broadcast] error function \n ${ e}`));
       }
     }
 
-    Object.setPrototypeOf(observable, { ...obPrototype, getData, isBroadCasted: true });
+    function close() {
+      bc.close();
+    }
+
+    Object.setPrototypeOf(observable, { ...obPrototype, getData, close, isBroadCasted: true });
     observable.next = broadcastNext;
     observable.error = broadcastError;
     observable.subscribe = broadcastSubscribe;
@@ -103,7 +107,7 @@ export function SubChannel(channelName) {
       if (!data) return;
 
       try {
-        callback(data, ev);
+        callback(data);
       } catch (e) {
         console.error(new Error(`[Observable: SubChannel] addEventListener callback \n ${ e}`));
       }
