@@ -27,7 +27,7 @@ export function broadcast(channelName) {
 
       if (data.type === 'getData') {
         try {
-          bc.postMessage({ type: 'getData', data: getData() });
+          bc.postMessage({ channelName: name, type: 'next', data: getData() });
         } catch (e) {
           console.error(new Error(`[Observable: broadcast] addEventListener callback \n ${ e}`));
         }
@@ -52,6 +52,10 @@ export function broadcast(channelName) {
           imitatedObservable.error();
         }
       });
+
+      if (options.relay > 0) {
+        subBC.postMessage({ channelName: name, type: 'getData', isSubChannel: true });
+      }
 
       return {
         ...imitatedSubscription,
@@ -99,7 +103,7 @@ export function SubChannel(channelName) {
       if (!data) return;
 
       try {
-        callback(data);
+        callback(data, ev);
       } catch (e) {
         console.error(new Error(`[Observable: SubChannel] addEventListener callback \n ${ e}`));
       }
