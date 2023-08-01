@@ -29,6 +29,8 @@ export function broadcast(channelName, channelOptions) {
     const name = getName(channelName, useSession);
     const bc = new BroadcastChannel(name);
 
+    const subCollection = new Map();
+
     const options = observable.getOptions();
     const next = obPrototype.next.bind(observable);
     const error = obPrototype.error.bind(observable);
@@ -40,42 +42,28 @@ export function broadcast(channelName, channelOptions) {
 
       if (!data) return;
 
-      if (data.type === 'getData') {
+      const { type, timestamp } = data;
+
+      if (type === 'getData') {
         try {
-          bc.postMessage({ channelName, type: 'next', data: getData() });
+          bc.postMessage({ channelName, timestamp, type: 'next', data: getData() });
         } catch (e) {
           console.error(new Error(`[Observable: broadcast] addEventListener callback \n ${ e}`));
         }
       }
     });
 
-    function broadcastSubscribe(...subArgs) {
-      const subBC = new BroadcastChannel(name);
+    function mainChannelSubscribe(...subArgs) {
+      const symbol = Symbol('');
       const imitatedObservable = new Observable({ options, status: getStatus(), initialData: getData() });
       const imitatedSubscription = imitatedObservable.subscribe(...subArgs);
 
-      subBC.addEventListener('message', (ev) => {
-        const { data } = ev;
-
-        if (!data) return;
-
-        if (data.type === 'next') {
-          imitatedObservable.next(data.data);
-        }
-
-        if (data.type === 'error') {
-          imitatedObservable.error();
-        }
-      });
-
-      if (options.relay > 0) {
-        subBC.postMessage({ channelName, type: 'getData', isSubChannel: true });
-      }
+      subCollection.set(symbol, imitatedObservable);
 
       return {
         ...imitatedSubscription,
         unsubscribe: (...unsubArgs) => {
-          subBC.close();
+          subCollection.delete(symbol);
           return imitatedSubscription.unsubscribe(...unsubArgs);
         }
       }
@@ -84,10 +72,16 @@ export function broadcast(channelName, channelOptions) {
     function broadcastNext(...dataArgs) {
       if (!next(...dataArgs)) return;
 
+      const data = getData();
+
       try {
-        bc.postMessage({ channelName, type: 'next', data: getData() });
+        bc.postMessage({ channelName, type: 'next', data });
       } catch (e) {
         console.error(new Error(`[Observable: broadcast] next function \n ${ e}`));
+      }
+
+      for (const [ , imitatedObservable ] of subCollection) {
+        imitatedObservable.next(data);
       }
     }
 
@@ -99,6 +93,10 @@ export function broadcast(channelName, channelOptions) {
       } catch (e) {
         console.error(new Error(`[Observable: broadcast] error function \n ${ e}`));
       }
+
+      for (const [ , imitatedObservable ] of subCollection) {
+        imitatedObservable.error();
+      }
     }
 
     function close() {
@@ -108,11 +106,12 @@ export function broadcast(channelName, channelOptions) {
     Object.setPrototypeOf(observable, { ...obPrototype, getData, close, isBroadCasted: true });
     observable.next = broadcastNext;
     observable.error = broadcastError;
-    observable.subscribe = broadcastSubscribe;
+    observable.subscribe = mainChannelSubscribe;
   }
 }
 
 export function SubChannel(channelName, channelOptions) {
+  const timestamp = new Date().getTime();
   const { useSession = true } = channelOptions || {};
   const subBC = new BroadcastChannel(getName(channelName, useSession));
 
@@ -123,7 +122,11 @@ export function SubChannel(channelName, channelOptions) {
       if (!data) return;
 
       try {
-        if (data.type === 'getData') return;
+        const { type, timestamp: _timestamp } = data;
+
+        if (type === 'getData') return;
+
+        if (_timestamp && _timestamp !== timestamp) return;
 
         callback(data);
       } catch (e) {
@@ -137,6 +140,6 @@ export function SubChannel(channelName, channelOptions) {
   }
 
   this.ask = () => {
-    subBC.postMessage({ channelName, type: 'getData', isSubChannel: true });
+    subBC.postMessage({ channelName, timestamp, type: 'getData', isSubChannel: true });
   }
 }
