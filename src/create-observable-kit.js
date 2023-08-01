@@ -1,4 +1,4 @@
-import { Observable, SubChannel, share, broadcast } from 'utils/observable'
+import { Observable, SubChannel, share, broadcast } from './observable'
 
 export function createObservableKit(initialData, options, { channelName = '' } = {}) {
   const observable = new Observable({ initialData, options: options || { relay: 1 } })
