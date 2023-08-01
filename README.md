@@ -2,7 +2,9 @@
 
 ## 简介
 
-Observable-RX是一个基于观察者模式的JavaScript库，用于处理异步数据流。它提供了一种优雅的方式来处理异步数据流，使得代码更易于理解和维护。
+Observable-RX是支持发布订阅模式、BroadcastChannel跨页面交互模式的JavaScript库，用于处理异步数据流。它提供了一种优雅的方式来处理异步数据流，使得代码更易于理解和维护。
+
+元对象基于观察者模式，扩展为运行时的发布订阅模式、跨页面的事件交互模式。事件模式同时包含两种模式，使主通道立即发布给同一环境内的订阅者，避免等待消息的延时问题。
 
 有别于RxJS的使用，其中一点是，当发出了error事件，不需要retry（吐槽下retry也没用），next跟error可以同时不限制地使用，这也是自研的原因之一。
 
@@ -276,6 +278,12 @@ observable.next('hello again');
 - `broadcast`
 
    使用 BroadcastChannel API来实现订阅，支持跨页面同步数据。
+
+### 创建套件
+
+ - `createObservableKit`
+
+ - `createSubChannelKit`
 
 ## 特别说明
 
