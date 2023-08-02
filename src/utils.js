@@ -1,5 +1,5 @@
 // https://www.xiabingbao.com/post/crypto/js-crypto-randomuuid-qxcuqj.html
-export function generateUUID() {
+function generateUUID() {
   if (typeof crypto === 'object') {
     if (typeof crypto.randomUUID === 'function') {
       // https://developer.mozilla.org/en-US/docs/Web/API/Crypto/randomUUID
@@ -27,4 +27,19 @@ export function generateUUID() {
     }
     return (c === 'x' ? random : (random & 0x3) | 0x8).toString(16);
   });
+}
+
+export function getName(channelName, useSession) {
+  const name = `bdlite-observable-broadcast-${channelName}`;
+
+  if (!useSession) return name;
+
+  let sessionName = window.sessionStorage.getItem(name);
+
+  if (!sessionName) {
+    sessionName = generateUUID();
+    window.sessionStorage.setItem(name, sessionName);
+  }
+
+  return sessionName
 }

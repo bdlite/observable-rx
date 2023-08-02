@@ -1,7 +1,7 @@
 import Observable from './observable'
-
+import SubChannel from './subchannel'
+import { broadcast } from './broadcast'
 import { share } from './share'
-import { SubChannel, broadcast } from './broadcast'
 
 
 export function createObservableKit(initialData, options, { channelName = '' } = {}) {

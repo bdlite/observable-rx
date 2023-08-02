@@ -1,20 +1,5 @@
 import Observable from './observable'
-import { generateUUID } from './utils'
-
-function getName(channelName, useSession) {
-  const name = `observable-rx-broadcast-${channelName}`;
-
-  if (!useSession) return name;
-
-  let sessionName = window.sessionStorage.getItem(name);
-
-  if (!sessionName) {
-    sessionName = generateUUID();
-    window.sessionStorage.setItem(name, sessionName);
-  }
-
-  return sessionName
-}
+import { getName } from './utils'
 
 
 export function broadcast(channelName, channelOptions) {
@@ -107,39 +92,5 @@ export function broadcast(channelName, channelOptions) {
     observable.next = broadcastNext;
     observable.error = broadcastError;
     observable.subscribe = mainChannelSubscribe;
-  }
-}
-
-export function SubChannel(channelName, channelOptions) {
-  const timestamp = new Date().getTime();
-  const { useSession = true } = channelOptions || {};
-  const subBC = new BroadcastChannel(getName(channelName, useSession));
-
-  this.watch = (callback) => {
-    subBC.addEventListener('message', (ev) => {
-      const { data } = ev;
-
-      if (!data) return;
-
-      try {
-        const { type, timestamp: _timestamp } = data;
-
-        if (type === 'getData') return;
-
-        if (_timestamp && _timestamp !== timestamp) return;
-
-        callback(data);
-      } catch (e) {
-        console.error(new Error(`[Observable: SubChannel] addEventListener callback \n ${ e}`));
-      }
-    });
-  }
-
-  this.close = () => {
-    subBC.close();
-  }
-
-  this.ask = () => {
-    subBC.postMessage({ channelName, timestamp, type: 'getData', isSubChannel: true });
   }
 }
