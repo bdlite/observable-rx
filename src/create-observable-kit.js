@@ -45,10 +45,10 @@ export function createObservableKit(initialData, options, { channelName = '' } =
 
   if (channelName) {
     broadcast(channelName)(observable) // 转跨页面广播模式
-    return { observable, publish, subscribe }
+  } else {
+    share()(observable) // 转发布订阅模式
   }
 
-  share()(observable) // 转发布订阅模式
   return { observable, getData, publish, subscribe }
 }
 
