@@ -34,6 +34,14 @@ export function createObservableKit(initialData, options, { channelName = '' } =
     observable.next(data)
   }
 
+  /**
+   * @function getData
+   * @returns {any} data
+  */
+  function getData() {
+    return observable.getData()
+  }
+
 
   if (channelName) {
     broadcast(channelName)(observable) // 转跨页面广播模式
@@ -41,7 +49,7 @@ export function createObservableKit(initialData, options, { channelName = '' } =
   }
 
   share()(observable) // 转发布订阅模式
-  return { observable, publish, subscribe }
+  return { observable, getData, publish, subscribe }
 }
 
 
